@@ -2,6 +2,19 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
+export const allCharsToReplace = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export const originallyChar = allCharsToReplace.charAt(Math.floor(Math.random() * allCharsToReplace.length));
+console.log(originallyChar);
+export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleUpperCase(), "").replace(originallyChar.toLowerCase(), "");
+console.log(notReplacedChars);
+export const replacedChar = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
+
+export const replacedChars = [{ f, replacedChar }];
+export const blameText = " \nDUDE YOU REALLY HAVE STINKY FINGERS! WANT TO WRITE SOME LYRICS BY MADONNA?: \n ";
+export const lyrics = "Every little thing that you say or do \nI'm hung up \nI'm hung up on you \nWaiting for your call \nBaby night and day \nI'm fed up \nI'm tired of waiting on you \nTime goes by so slowly for those who wait \nNo time to hesitate \nThose who run seem to have all the fun \nI'm caught up \nI don't know what to do \nTime goes by so slowly \nTime goes by so slowly \nTime goes by so slowly \nI don't know what to do";
+export const blameValue = blameText + lyrics;
+export var blameIndex = 0;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -49,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
               if (lastTypedChar === "h") {
                 console.log("Replace char ;-)");
                 // replace the last typed char with another char
-                activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), "?"));
+                activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), replaceChar('f')));
               }
             }
       }
@@ -61,3 +74,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+function replaceChar(s: string): string {
+  if (replacedChars[].includes(s)) {
+    lyricIndex++;
+    return lyrics[lyricIndex];
+  } else {
+    return blameValue[blameIndex++];
+  }
+  return "x";
+}
