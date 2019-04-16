@@ -9,7 +9,15 @@ export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleU
 console.log(notReplacedChars);
 export const replacedChar = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
 
-export const replacedChars = [{ originallyChar, replacedChar }];
+
+let Dictionary = new Map<string, string>();
+//Dictionary.set(originallyChar, replacedChar);
+Dictionary.set('h', 'x');
+
+/*export var replacedChars = {
+  originallyChar: replacedChar,
+};
+*/
 export const blameText = " \nDUDE YOU REALLY HAVE STINKY FINGERS! WANT TO WRITE SOME LYRICS BY MADONNA?: \n ";
 export const lyrics = "Every little thing that you say or do \nI'm hung up \nI'm hung up on you \nWaiting for your call \nBaby night and day \nI'm fed up \nI'm tired of waiting on you \nTime goes by so slowly for those who wait \nNo time to hesitate \nThose who run seem to have all the fun \nI'm caught up \nI don't know what to do \nTime goes by so slowly \nTime goes by so slowly \nTime goes by so slowly \nI don't know what to do";
 export const blameValue = blameText + lyrics;
@@ -59,11 +67,12 @@ export function activate(context: vscode.ExtensionContext) {
               var lastTypedChar = activeEditor.document.getText(new vscode.Range(position, new vscode.Position(position.line,position.character+1)));
               console.log("Last char was " + lastTypedChar);
 
-              if (lastTypedChar === "h") {
+//              if (lastTypedChar === "h") {
                 console.log("Replace char ;-)");
                 // replace the last typed char with another char
-                activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), replaceChar('f')));
-              }
+                activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), handleTypedChar(lastTypedChar
+                  )));
+  //            }
             }
       }
   }, null, context.subscriptions);
@@ -72,10 +81,43 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 
+
 // this method is called when your extension is deactivated
 export function deactivate() {}
 
-function replaceChar(s: string): string {
-  return blameValue[blameIndex++];
+export function handleTypedChar(char: string): string {
+  // this block is executed when enough chars were replaced and we want to blame the user
+  if (Dictionary.get.length > 10) {
+    return blameValue[blameIndex++];
+  }
+  // should char been replaced?
+  else if (Dictionary.has(char)) {
+    return String(Dictionary.get(char));
+  }
+  // did the user just typed the next char we want to replace?
+  //else if (char in Dictionary.replacedChars.lastElement) {
+    Dictionary.forEach((origin, replace) => {
+      if (char === replace) {
+        console.log("replace char!!!!!!");
+      }
+    });
+  //}
+  // return the char the user typed
+  return char;
+}
+/*
+export function charHasToBeReplaced(s: string): boolean {
+  if 
+  return false;
+}
+
+export function replaceChar(s: string): string {
+  if (15 chars; bereits; ersetzt;) {
+    return blameValue[blameIndex++];
+  }
+  else {
+    schaue; für; welchen;
+  }
   return "x";
 }
+*/
