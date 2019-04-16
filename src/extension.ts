@@ -9,7 +9,7 @@ export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleU
 console.log(notReplacedChars);
 export const replacedChar = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
 
-export const replacedChars = [{ f, replacedChar }];
+export const replacedChars = [{ originallyChar, replacedChar }];
 export const blameText = " \nDUDE YOU REALLY HAVE STINKY FINGERS! WANT TO WRITE SOME LYRICS BY MADONNA?: \n ";
 export const lyrics = "Every little thing that you say or do \nI'm hung up \nI'm hung up on you \nWaiting for your call \nBaby night and day \nI'm fed up \nI'm tired of waiting on you \nTime goes by so slowly for those who wait \nNo time to hesitate \nThose who run seem to have all the fun \nI'm caught up \nI don't know what to do \nTime goes by so slowly \nTime goes by so slowly \nTime goes by so slowly \nI don't know what to do";
 export const blameValue = blameText + lyrics;
@@ -76,11 +76,6 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 function replaceChar(s: string): string {
-  if (replacedChars[].includes(s)) {
-    lyricIndex++;
-    return lyrics[lyricIndex];
-  } else {
-    return blameValue[blameIndex++];
-  }
+  return blameValue[blameIndex++];
   return "x";
 }
