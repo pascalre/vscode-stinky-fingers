@@ -5,6 +5,7 @@
 
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
+import { handleTypedChar, dictionary, numberOfCharsUntilBlame, blameText, blameIndex, lastCharWasReplaced } from '../extension';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -14,17 +15,32 @@ import * as assert from 'assert';
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", function () {
 
-    // Defines a Mocha unit test
-    test("Something 1", function() {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(-1, [1, 2, 3].indexOf(0));
+    test("Test 1/4: Char should not be replaced.", function() {
+        assert.equal(handleTypedChar('p'), 'p');
     });
 
-    // Test 1: Char should not be replaced
 
-    // Test 2: Char should be replaced by char from map
+    test("Test 2/4: Char should be replaced by char from map.", function() {
+        dictionary.set('g', 'h')
+        assert.equal(handleTypedChar('g'), 'h');
+    });
 
-    // Test 3: A new char <-> replace entry should be done into map
 
-    // Test 4: Char should be replaced by char from blameValue
+    test("Test 3/4: A new char <-> replace entry should be done into map.", function() {
+        var keys = dictionary.size;
+        assert.notEqual(handleTypedChar('h'), 'h');
+        assert.equal(keys+1, dictionary.size);
+    });
+
+    test("Test 4/4: Char should be replaced by char from blameValue.", function() {
+        dictionary.clear();
+        var i;
+        for (i = 0; i < numberOfCharsUntilBlame; i++) { 
+            dictionary.set(i.toString(), 'x');
+        }
+        console.log("dictionary size: " + dictionary.size);
+        assert.equal(handleTypedChar('g'), "\n" + blameText.charAt(1));
+        assert.equal(handleTypedChar('g'), blameText.charAt(1));
+
+    });
 });

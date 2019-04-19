@@ -2,19 +2,18 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-export const allCharsToReplace = "abcdefghijklmnopqrstuvwxyz";
+export const allCharsToReplace = "abcdfghijklmnopqrtuvwxyz";
 export const originallyChar = allCharsToReplace.charAt(Math.floor(Math.random() * allCharsToReplace.length));
-console.log(originallyChar);
 export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleUpperCase(), "").replace(originallyChar.toLowerCase(), "");
-console.log(notReplacedChars);
 export const replacedChar = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
 export var lastCharWasReplaced = false;
+export var numberOfCharsUntilBlame = 2;
 
-let Dictionary = new Map<string, string>();
-Dictionary.set('h', 'x');
+export var dictionary = new Map<string, string>();
+dictionary.set('e', 's');
 
-export const blameText = " \nDUDE YOU REALLY HAVE STINKY FINGERS! WANT TO WRITE SOME LYRICS BY MADONNA?: \n ";
-export const lyrics = "Every little thing that you say or do \nI'm hung up \nI'm hung up on you \nWaiting for your call \nBaby night and day \nI'm fed up \nI'm tired of waiting on you \nTime goes by so slowly for those who wait \nNo time to hesitate \nThose who run seem to have all the fun \nI'm caught up \nI don't know what to do \nTime goes by so slowly \nTime goes by so slowly \nTime goes by so slowly \nI don't know what to do";
+export const blameText = "\nDUDE YOU REALLY HAVE STINKY FINGERS! WANT TO WRITE SOME LYRICS BY MADONNA?:";
+export const lyrics = "\nEvery little thing that you say or do \nI'm hung up \nI'm hung up on you \nWaiting for your call \nBaby night and day \nI'm fed up \nI'm tired of waiting on you \nTime goes by so slowly for those who wait \nNo time to hesitate \nThose who run seem to have all the fun \nI'm caught up \nI don't know what to do \nTime goes by so slowly \nTime goes by so slowly \nTime goes by so slowly \nI don't know what to do";
 export const blameValue = blameText + lyrics;
 export var blameIndex = 0;
 
@@ -54,9 +53,14 @@ export function activate(context: vscode.ExtensionContext) {
         }
         console.log("User typed char " + lastTypedChar);
 
-        // replace the last typed char with another char
         activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), handleTypedChar(lastTypedChar)));
-        position = new vscode.Position(activeEditor.selection.end.line, activeEditor.selection.end.character+1); 
+
+        // check if a new line was written and update position
+        if ( (blameIndex === 2) || (blameValue.substr(blameIndex-1, blameIndex-1).startsWith('\n'))) {
+          position = new vscode.Position(activeEditor.selection.end.line+1, activeEditor.selection.end.character+1); 
+        } else {
+          position = new vscode.Position(activeEditor.selection.end.line, activeEditor.selection.end.character+1); 
+        }
         activeEditor.selection = new vscode.Selection(position, position);
       }
     }
@@ -70,39 +74,31 @@ export function deactivate() {}
 
 export function handleTypedChar(char: string): string {
   char = char.toLocaleLowerCase();
-  if (Dictionary.size > 4) {
+  if (dictionary.size >= numberOfCharsUntilBlame) {
     // this block is executed when enough chars were replaced and we want to blame the user
     console.log("Blame char " + blameValue[blameIndex]);
-    if ((blameIndex === 0 ) || (blameIndex === blameText.length ) ){
+    console.log("next char " + blameValue[blameIndex+1]);
+    
+    if (blameValue.substr(blameIndex, blameIndex+1).valueOf() === "\n" ) {
+      blameIndex=blameIndex+1;
       return "\n"+ blameValue[blameIndex++];
     }
     return blameValue[blameIndex++];
   }
   // should char be replaced?
-  else if (Dictionary.has(char)) {
-    console.log("Replace " + char + "  with " + Dictionary.get(char));
+  else if (dictionary.has(char)) {
+    console.log("Replace " + char + "  with " + dictionary.get(char));
     lastCharWasReplaced = true;
-    return String(Dictionary.get(char));
+    return String(dictionary.get(char));
   }
   // did the user just typed the next char we want to replace?
-  console.log("See if " + char + " matches " + Array.from(Dictionary)[Dictionary.size-1][1]);
-  if (char.charAt(0) === Array.from(Dictionary)[Dictionary.size-1][1].charAt(0)){
+  console.log("See if " + char + " matches " + Array.from(dictionary)[dictionary.size-1][1]);
+  if (char.charAt(0) === Array.from(dictionary)[dictionary.size-1][1].charAt(0)){
     notReplacedChars = notReplacedChars.replace(char.toLocaleUpperCase(), "").replace(char.toLowerCase(), "");
     var replaceWith = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
-    Dictionary.set(char, replaceWith);
+    dictionary.set(char, replaceWith);
     console.log("character " + char + " will now be replaced by " + replaceWith);
-}
-  /*
-  Dictionary.forEach((replace, origin) => {
-    // see if typed char matches on of the 
-  
-    if (char.toLocaleLowerCase.valueOf() === replace.toLocaleLowerCase.valueOf()) {
-      lastCharWasReplaced = true;
-      return(replaceWith);
-    }
-  });
-  */
-  // return the char the user typed
-  
+    return replaceWith;
+  }
   return char;
 }

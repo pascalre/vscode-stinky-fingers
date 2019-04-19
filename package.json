@@ -2,10 +2,13 @@
   "name": "stinky-fingers",
   "displayName": "stinky-fingers",
   "description": "This VS Code plugin will jerk your colleagues around. You can install this plugin at your colleagues computer and see what happens.",
-  "version": "0.0.1",
+  "version": "1.0.0-SNAPSHOT",
   "engines": {
     "vscode": "^1.33.0"
   },
+  "publisher": "PascalReitermann93",
+  "icon": "images/icon.png",
+  "repository": "https://github.com/pascalre/vscode-stinky-fingers",
   "categories": [
     "Other"
   ],
