@@ -7,7 +7,7 @@ export const originallyChar = allCharsToReplace.charAt(Math.floor(Math.random() 
 export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleUpperCase(), "").replace(originallyChar.toLowerCase(), "");
 export const replacedChar = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
 export var lastCharWasReplaced = false;
-export var numberOfCharsUntilBlame = 2;
+export var numberOfCharsUntilBlame = 10;
 
 export var dictionary = new Map<string, string>();
 dictionary.set('e', 's');
