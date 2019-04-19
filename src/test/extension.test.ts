@@ -19,4 +19,12 @@ suite("Extension Tests", function () {
         assert.equal(-1, [1, 2, 3].indexOf(5));
         assert.equal(-1, [1, 2, 3].indexOf(0));
     });
+
+    // Test 1: Char should not be replaced
+
+    // Test 2: Char should be replaced by char from map
+
+    // Test 3: A new char <-> replace entry should be done into map
+
+    // Test 4: Char should be replaced by char from blameValue
 });

@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-export const allCharsToReplace = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export const allCharsToReplace = "abcdefghijklmnopqrstuvwxyz";
 export const originallyChar = allCharsToReplace.charAt(Math.floor(Math.random() * allCharsToReplace.length));
 console.log(originallyChar);
 export var notReplacedChars = allCharsToReplace.replace(originallyChar.toLocaleUpperCase(), "").replace(originallyChar.toLowerCase(), "");
@@ -39,10 +39,6 @@ export function activate(context: vscode.ExtensionContext) {
   let activeEditor = vscode.window.activeTextEditor;
 
   vscode.workspace.onDidChangeTextDocument(event => {
-    if (lastCharWasReplaced === true) {
-      lastCharWasReplaced = false;
-      return;
-    }
 
     if (activeEditor && event.document === activeEditor.document) {
       // check if there is no selection
@@ -52,15 +48,16 @@ export function activate(context: vscode.ExtensionContext) {
 
         // get last typed char
         var lastTypedChar = activeEditor.document.getText(new vscode.Range(position, new vscode.Position(position.line,position.character+1)));
+
+        if (lastTypedChar === "") {
+          return;
+        }
         console.log("User typed char " + lastTypedChar);
 
         // replace the last typed char with another char
-        // Todo: if char has to be replaced execute:
-//        if (handleTypedChar(lastTypedChar).valueOf() !== "" ) {
-          activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), handleTypedChar(lastTypedChar)));
-          position = new vscode.Position(activeEditor.selection.end.line, activeEditor.selection.end.character+1); 
-          activeEditor.selection = new vscode.Selection(position, position);
-//        }
+        activeEditor.edit(builder => builder.replace(new vscode.Range(position, new vscode.Position(position.line,position.character+1)), handleTypedChar(lastTypedChar)));
+        position = new vscode.Position(activeEditor.selection.end.line, activeEditor.selection.end.character+1); 
+        activeEditor.selection = new vscode.Selection(position, position);
       }
     }
   }, null, context.subscriptions);
@@ -72,11 +69,13 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 export function handleTypedChar(char: string): string {
+  char = char.toLocaleLowerCase();
   if (Dictionary.size > 4) {
     // this block is executed when enough chars were replaced and we want to blame the user
-    console.log("Ok that's enough, lets blame this guy.");
-    console.log("Write char " + blameValue[blameIndex]);
-    lastCharWasReplaced = true;
+    console.log("Blame char " + blameValue[blameIndex]);
+    if ((blameIndex === 0 ) || (blameIndex === blameText.length ) ){
+      return "\n"+ blameValue[blameIndex++];
+    }
     return blameValue[blameIndex++];
   }
   // should char be replaced?
@@ -86,17 +85,24 @@ export function handleTypedChar(char: string): string {
     return String(Dictionary.get(char));
   }
   // did the user just typed the next char we want to replace?
+  console.log("See if " + char + " matches " + Array.from(Dictionary)[Dictionary.size-1][1]);
+  if (char.charAt(0) === Array.from(Dictionary)[Dictionary.size-1][1].charAt(0)){
+    notReplacedChars = notReplacedChars.replace(char.toLocaleUpperCase(), "").replace(char.toLowerCase(), "");
+    var replaceWith = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
+    Dictionary.set(char, replaceWith);
+    console.log("character " + char + " will now be replaced by " + replaceWith);
+}
+  /*
   Dictionary.forEach((replace, origin) => {
+    // see if typed char matches on of the 
+  
     if (char.toLocaleLowerCase.valueOf() === replace.toLocaleLowerCase.valueOf()) {
-      notReplacedChars = notReplacedChars.replace(char.toLocaleUpperCase(), "").replace(char.toLowerCase(), "");
-      var replaceWith = notReplacedChars.charAt(Math.floor(Math.random()* notReplacedChars.length));
-      Dictionary.set(char, replaceWith);
-      console.log("character " + char + " will now be replaced by " + replaceWith);
       lastCharWasReplaced = true;
       return(replaceWith);
     }
   });
+  */
   // return the char the user typed
-  lastCharWasReplaced = false;
-  return "";
+  
+  return char;
 }
