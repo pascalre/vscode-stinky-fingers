@@ -2,7 +2,7 @@
   "name": "stinky-fingers",
   "displayName": "Stinky Fingers",
   "description": "This VS Code plugin will jerk your colleagues around. You can install this plugin at your colleagues computer and see what happens.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.33.0"
   },

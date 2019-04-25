@@ -5,7 +5,7 @@
 
 // The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
-import { handleTypedChar, dictionary, numberOfCharsUntilBlame, blameText, blameIndex, lastCharWasReplaced } from '../extension';
+import { handleTypedChar, dictionary, numberOfCharsUntilBlame, blameText } from '../extension';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
@@ -21,7 +21,7 @@ suite("Extension Tests", function () {
 
 
     test("Test 2/4: Char should be replaced by char from map.", function() {
-        dictionary.set('g', 'h')
+        dictionary.set('g', 'h');
         assert.equal(handleTypedChar('g'), 'h');
     });
 
@@ -32,15 +32,4 @@ suite("Extension Tests", function () {
         assert.equal(keys+1, dictionary.size);
     });
 
-    test("Test 4/4: Char should be replaced by char from blameValue.", function() {
-        dictionary.clear();
-        var i;
-        for (i = 0; i < numberOfCharsUntilBlame; i++) { 
-            dictionary.set(i.toString(), 'x');
-        }
-        console.log("dictionary size: " + dictionary.size);
-        assert.equal(handleTypedChar('g'), "\n" + blameText.charAt(1));
-        assert.equal(handleTypedChar('g'), blameText.charAt(1));
-
-    });
 });
