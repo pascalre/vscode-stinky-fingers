@@ -15,21 +15,21 @@ import { handleTypedChar, dictionary, numberOfCharsUntilBlame, blameText } from 
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", function () {
 
-    test("Test 1/4: Char should not be replaced.", function() {
-        assert.equal(handleTypedChar('p'), 'p');
-    });
+  test("Test 1/3: Char should not be replaced.", function() {
+    assert.equal(handleTypedChar('p'), 'p');
+  });
 
 
-    test("Test 2/4: Char should be replaced by char from map.", function() {
-        dictionary.set('g', 'h');
-        assert.equal(handleTypedChar('g'), 'h');
-    });
+  test("Test 2/3: Char should be replaced by char from map.", function() {
+    dictionary.set('g', 'h')
+    assert.equal(handleTypedChar('g'), 'h');
+  });
 
 
-    test("Test 3/4: A new char <-> replace entry should be done into map.", function() {
-        var keys = dictionary.size;
-        assert.notEqual(handleTypedChar('h'), 'h');
-        assert.equal(keys+1, dictionary.size);
-    });
+  test("Test 3/3: A new char <-> replace entry should be done into map.", function() {
+    var keys = dictionary.size;
+    assert.notEqual(handleTypedChar('h'), 'h');
+    assert.equal(keys+1, dictionary.size);
+  });
 
 });
