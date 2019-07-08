@@ -23,22 +23,20 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "stinky-fingers" is now active!');
-    // Display a message box to the user
-    vscode.window.showInformationMessage('You activated Stinky Fingers!');
+  console.log('Congratulations, your extension "stinky-fingers" is now active!');
+  vscode.window.showInformationMessage('You activated Stinky Fingers!');
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('extension.getstinky', () => {
+  context.subscriptions.push(vscode.commands.registerCommand('extension.getStinky', () => {
   // The code you place here will be executed every time your command is executed
-
-  });
+  }));
 
   let activeEditor = vscode.window.activeTextEditor;
 
-  vscode.workspace.onDidChangeTextDocument(event => {
+  vscode.window.onDidChangeActiveTextEditor(event => {
+    activeEditor = vscode.window.activeTextEditor;
+  });
 
+  vscode.workspace.onDidChangeTextDocument(event => {
     if (activeEditor && event.document === activeEditor.document) {
       // check if there is no selection
       if (activeEditor.selection.isEmpty) {
@@ -76,7 +74,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }, null, context.subscriptions);
 
-  context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated

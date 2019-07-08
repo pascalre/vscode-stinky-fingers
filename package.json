@@ -13,13 +13,13 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.getstinky"
+    "onCommand:extension.getStinky"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.getstinky",
+        "command": "extension.getStinky",
         "title": "Get stinky"
       }
     ]
